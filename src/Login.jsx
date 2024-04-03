@@ -1,6 +1,6 @@
 import { Form, Input, Button, message } from 'antd';
 import './login.css'
-import { deleteLocalStorage, getToken, setLocalStorage, signin, tokenKey } from "./Auth.js";
+import {  setLocalStorage, signin, tokenKey } from "./Auth.js";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -9,6 +9,7 @@ const Login = () => {
     const onFinish = (values) => {
         signin(values).then(res => {
             if (res && res?.data?.data?.tokens?.accessToken?.token) {
+                console.log(res.data.data.token);
                 setLocalStorage(tokenKey, res?.data?.data?.tokens?.accessToken?.token);
                 message.success("Muvaffaqiyatli o'tildi")
                 navigate('/home');

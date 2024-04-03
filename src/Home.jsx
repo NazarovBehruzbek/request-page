@@ -9,6 +9,7 @@ function Home() {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const authToken = getToken(tokenKey);
+    const urlimage = 'https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/' 
 
     const getData = () => {
         axios.get(`https://autoapi.dezinfeksiyatashkent.uz/api/categories`, {
@@ -32,8 +33,13 @@ function Home() {
         formData.append('name_en', values.name_en);
         formData.append('name_ru', values.name_ru);
         if (values.image_src && values.image_src.length > 0) {
-            formData.append('images', values.image_src[0].originFileObj, values.image_src[0].name);
+            if (form.id && values.image_src.length > 1) {
+                formData.append('images', values.image_src[1].originFileObj, values.image_src[1].name);
+            } else {
+                formData.append('images', values.image_src[0].originFileObj, values.image_src[0].name);
+            }
         }
+                   
         const url = form.id ? `https://autoapi.dezinfeksiyatashkent.uz/api/categories/${form.id}` : "https://autoapi.dezinfeksiyatashkent.uz/api/categories";
         const method = form.id ? 'PUT' : 'POST';
         const authToken = getToken(tokenKey);
@@ -91,16 +97,17 @@ function Home() {
         form.setFieldsValue({
             name_en: item.name_en,
             name_ru: item.name_ru,
-            image_src: [{ uid: '-1', name: item.image_src, status: 'done', url: item.image_src }],
+            image_src: [{ uid: item.id, name: 'image', status: 'done', url: `${urlimage}${item.image_src}` }],
         });
         form.id = item.id;
     };
+    
 
     const dataSource = categories.map((item, index) => ({
         key: item.id,
         number: index + 1,
         images: (
-            <img src={item.image_src} alt="Error" />
+            <img style={{width:"70px",height:'40px'}} src={`${urlimage}${item.image_src}`} alt="Error" />
         ),
         id: item.id,
         name_en: item.name_en,
@@ -159,6 +166,11 @@ function Home() {
             key: 'number',
         },
         {
+            title: 'Avatar',
+            dataIndex: 'images',
+            key: 'images',
+        },
+        {
             title: 'id',
             dataIndex: 'id',
             key: 'id',
@@ -185,7 +197,7 @@ function Home() {
             <Button style={{ marginBottom: '30px' }} onClick={showModal} type="primary">Add</Button>
             <Button onClick={logOut}>LOG OUT</Button>
             <Table dataSource={dataSource} columns={columns} />
-            <Modal title="Add" visible={isModalOpen} onCancel={handleCancel} footer={null}>
+            <Modal title="Add" open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={handleOk}>
                     <Form.Item name="name_en" label="Name (English)" rules={[{ required: true, message: 'Please enter the name in English' }]}>
                         <Input />
