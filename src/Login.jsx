@@ -1,6 +1,6 @@
-import {Form, Input, Button, message} from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import './login.css'
-import {deleteLocalStorage, getToken, setLocalStorage, signin, tokenKey} from "./Auth.js";
+import { deleteLocalStorage, getToken, setLocalStorage, signin, tokenKey } from "./Auth.js";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -48,7 +48,7 @@ const Login = () => {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{marginRight:'20px'}}>
+                    <Button type="primary" htmlType="submit" style={{ marginRight: '20px' }}>
                         Kirish
                     </Button>
                 </Form.Item>
